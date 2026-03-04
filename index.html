@@ -1,31 +1,30 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <title>Diario de Aventuras</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mundo de Aventuras.</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --rose-600: #e11d48;
-            --rose-500: #f43f5e;
-            --rose-400: #fb7185;
-            --accent-font: 'Dancing Script', cursive;
-            --main-font: 'Montserrat', sans-serif;
+            --primary: #f43f5e;
+            --primary-light: #fff1f2;
+            --bg-silk: #fffafb;
         }
 
-        body {
-            font-family: var(--main-font);
-            background: linear-gradient(-45deg, #fff1f2, #ffe4e6, #fecdd3, #fff1f2);
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            margin: 0;
+            background: linear-gradient(-45deg, #fffafb, #fff1f2, #ffe4e6, #fffafb);
             background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
+            animation: gradientAnimation 15s ease infinite;
+            color: #1e293b;
             min-height: 100vh;
-            position: relative;
         }
-
+        
         body::before {
             content: "";
             position: fixed;
@@ -36,373 +35,424 @@
             z-index: -1;
         }
 
-        @keyframes gradientBG {
+        @keyframes gradientAnimation {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
 
-        .header-title {
-            font-family: var(--accent-font);
-            background: linear-gradient(to right, #be123c, #e11d48, #db2777);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0px 2px 2px rgba(225, 29, 72, 0.1));
+        .world-container {
+            position: relative;
+            width: 50px;
+            height: 50px;
+            perspective: 1000px;
         }
 
-        .place-card {
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(5px);
+        .world-sphere {
+            width: 100%;
+            height: 100%;
+            background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Blue_Marble_2002.png/600px-Blue_Marble_2002.png');
+            background-size: cover;
+            border-radius: 50%;
+            box-shadow: inset -10px -10px 20px rgba(0,0,0,0.4), 0 0 15px rgba(244, 63, 94, 0.3);
+            animation: rotateWorld 10s linear infinite;
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.2);
         }
+
+        @keyframes rotateWorld {
+            from { background-position: 0 0; }
+            to { background-position: 200% 0; }
+        }
+
+        .world-ring {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) rotateX(75deg);
+            width: 70px;
+            height: 70px;
+            border: 2px solid rgba(244, 63, 94, 0.2);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .accent-font { font-family: 'Dancing Script', cursive; }
         
-        .place-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 25px -5px rgba(225, 29, 72, 0.15);
-        }
-
-        .place-card.completed {
-            background-color: rgba(243, 244, 246, 0.85);
-            filter: grayscale(0.2);
-            transform: scale(0.97);
-            border: 2px solid var(--rose-400);
-        }
-
-        .check-badge { display: none; }
-        .completed .check-badge { display: flex; }
-
-        .custom-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #fb7185; border-radius: 10px; }
-
-        .glass-nav {
-            background: rgba(255, 255, 255, 0.9);
+        .glass-header {
+            background: rgba(255, 255, 255, 0.6);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
         }
 
-        @keyframes slideUp {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
+        .romantic-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid rgba(255, 255, 255, 0.6);
         }
-        .animate-slide-up { animation: slideUp 0.3s ease-out; }
+        
+        .romantic-card:hover:not(.visited-card) {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 25px 50px -12px rgba(244, 63, 94, 0.15);
+            border-color: rgba(244, 63, 94, 0.2);
+        }
 
-        .btn-premium {
+        .visited-card {
+            opacity: 0.6;
+            filter: grayscale(0.4);
+            transform: scale(0.98);
+        }
+
+        .filter-btn {
             transition: all 0.3s ease;
-            box-shadow: 0 4px 6px -1px rgba(225, 29, 72, 0.1);
-        }
-        .btn-premium:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 15px -3px rgba(225, 29, 72, 0.2);
         }
 
-        .fav-btn {
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        .filter-btn.active {
+            background: #f43f5e !important;
+            color: white !important;
+            border-color: #f43f5e !important;
+            box-shadow: 0 8px 15px -5px rgba(244, 63, 94, 0.3);
         }
-        .fav-btn.active {
-            color: #e11d48;
-            transform: scale(1.2);
+
+        .empty-state {
+            grid-column: 1 / -1;
+            padding: 4rem 1rem;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 3rem;
+            border: 2px dashed rgba(244, 63, 94, 0.2);
+            margin: 2rem 0;
         }
     </style>
 </head>
-<body class="antialiased text-gray-800">
+<body>
 
-    <header class="glass-nav shadow-lg sticky top-0 z-50 p-4 border-b border-rose-200">
-        <div class="max-w-4xl mx-auto">
-            <h1 class="header-title text-3xl md:text-5xl font-bold text-center mb-4 tracking-tight">
-                Diario de Aventuras
-            </h1>
-            <div class="flex flex-col gap-2">
-                <div class="flex justify-between text-[11px] md:text-xs font-black text-rose-600 px-1 uppercase tracking-widest">
-                    <span id="progress-status">Cargando...</span>
-                    <span id="progress-text" class="bg-rose-500 text-white px-3 py-0.5 rounded-full shadow-sm">0/0</span>
+    <header class="sticky top-0 z-50 glass-header py-6 px-8">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center gap-5">
+                <div class="world-container hidden sm:block">
+                    <div class="world-sphere"></div>
+                    <div class="world-ring"></div>
                 </div>
-                <div class="bg-white/60 rounded-full h-4 overflow-hidden border border-rose-200 shadow-inner">
-                    <div id="progress-bar" class="bg-gradient-to-r from-rose-500 via-rose-400 to-rose-600 h-full transition-all duration-1000 ease-in-out" style="width: 0%"></div>
+                <div>
+                    <h1 class="text-3xl font-800 tracking-tight text-slate-900">MUNDO <span class="text-rose-500 accent-font text-4xl ml-1">de Aventuras</span></h1>
+                    <p class="text-[9px] uppercase tracking-[0.4em] text-rose-500 font-bold mt-1 text-center sm:text-left">Coleccionando momentos para Jonathan</p>
+                </div>
+            </div>
+            
+            <div class="bg-white/40 p-2 rounded-[2.5rem] flex items-center gap-6 shadow-lg border border-white/60">
+                <div class="flex items-center gap-4 px-4 py-1">
+                    <div class="relative flex items-center justify-center">
+                        <svg class="w-14 h-14 transform -rotate-90">
+                            <circle cx="28" cy="28" r="24" stroke="currentColor" stroke-width="4" fill="transparent" class="text-rose-50" />
+                            <circle id="progress-circle" cx="28" cy="28" r="24" stroke="currentColor" stroke-width="4" fill="transparent" stroke-dasharray="150.8" stroke-dashoffset="150.8" class="text-rose-500 transition-all duration-1000" stroke-linecap="round" />
+                        </svg>
+                        <span id="progress-percent" class="absolute text-[11px] font-800 text-rose-600">0%</span>
+                    </div>
+                    <div>
+                        <div class="flex items-baseline gap-1">
+                            <span id="visited-count" class="text-2xl font-800 text-slate-800">0</span>
+                            <span class="text-xs font-bold text-slate-300">/</span>
+                            <span class="text-xs font-bold text-slate-400">70</span>
+                        </div>
+                        <span class="text-[9px] font-black text-slate-400 block uppercase tracking-tighter">Lugares visitados</span>
+                    </div>
                 </div>
             </div>
         </div>
     </header>
 
-    <nav class="p-4 overflow-x-auto whitespace-nowrap bg-white/40 sticky top-[115px] md:top-[145px] z-40 custom-scrollbar border-b border-rose-100 backdrop-blur-md flex justify-start md:justify-center">
-        <div class="flex gap-2 px-2">
-            <button onclick="filterPlaces('todos', this)" class="filter-btn px-6 py-2 rounded-full bg-rose-500 text-white font-extrabold text-xs shadow-md transition-all">✨ Todos</button>
-            <button onclick="filterPlaces('favoritos', this)" class="filter-btn px-6 py-2 rounded-full bg-white/80 border border-rose-100 text-rose-600 font-bold text-xs hover:bg-rose-50 transition-all">❤️ Mis Favoritos</button>
-            <button onclick="filterPlaces('acuarios', this)" class="filter-btn px-6 py-2 rounded-full bg-white/80 border border-rose-100 text-rose-600 font-bold text-xs hover:bg-rose-50 transition-all">🐠 Acuarios</button>
-            <button onclick="filterPlaces('museos', this)" class="filter-btn px-6 py-2 rounded-full bg-white/80 border border-rose-100 text-rose-600 font-bold text-xs hover:bg-rose-50 transition-all">🏛️ Museos</button>
-            <button onclick="filterPlaces('cafeterias', this)" class="filter-btn px-6 py-2 rounded-full bg-white/80 border border-rose-100 text-rose-600 font-bold text-xs hover:bg-rose-50 transition-all">☕ Cafeterías</button>
-            <button onclick="filterPlaces('comida', this)" class="filter-btn px-6 py-2 rounded-full bg-white/80 border border-rose-100 text-rose-600 font-bold text-xs hover:bg-rose-50 transition-all">🍜 Comida</button>
-            <button onclick="filterPlaces('pueblos', this)" class="filter-btn px-6 py-2 rounded-full bg-white/80 border border-rose-100 text-rose-600 font-bold text-xs hover:bg-rose-50 transition-all">🏘️ Pueblos</button>
-            <button onclick="filterPlaces('parques', this)" class="filter-btn px-6 py-2 rounded-full bg-white/80 border border-rose-100 text-rose-600 font-bold text-xs hover:bg-rose-50 transition-all">🌳 Parques</button>
-        </div>
-    </nav>
-
-    <main class="max-w-7xl mx-auto p-4 md:p-8 lg:p-12 mb-20">
-        <div id="places-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8"></div>
-        <div id="no-results" class="hidden text-center py-24">
-            <div class="inline-block p-6 bg-white/80 rounded-full shadow-xl mb-4">
-                <i class="fas fa-sparkles text-rose-300 text-5xl"></i>
+    <main class="max-w-7xl mx-auto px-6 py-12">
+        <div class="mb-12 space-y-8">
+            <div class="relative max-w-2xl mx-auto">
+                <i class="fa-solid fa-magnifying-glass absolute left-6 top-1/2 -translate-y-1/2 text-rose-300"></i>
+                <input type="text" id="searchInput" placeholder="¿A dónde iremos hoy, Jonathan?" 
+                    class="w-full pl-16 pr-10 py-5 rounded-full bg-white/60 backdrop-blur-md shadow-xl border border-white focus:ring-4 focus:ring-rose-100 outline-none text-lg transition-all">
             </div>
-            <p id="no-results-text" class="text-rose-500 text-xl font-bold">¡Pronto añadiremos más aventuras! ✨</p>
+            
+            <div class="flex flex-wrap justify-center gap-2" id="filterContainer">
+                <button onclick="filterBy('all')" id="btn-all" class="filter-btn active px-6 py-2.5 rounded-full text-[9px] font-bold uppercase tracking-widest bg-white/60 text-slate-500 border border-white shadow-sm">Todos</button>
+                <button onclick="filterBy('favs')" id="btn-favs" class="filter-btn px-6 py-2.5 rounded-full text-[9px] font-bold uppercase tracking-widest bg-white/60 text-rose-400 border border-rose-50 shadow-sm">
+                    <i class="fa-solid fa-heart mr-2"></i>Favs
+                </button>
+            </div>
         </div>
+
+        <div id="placesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"></div>
     </main>
 
-    <div id="modal" class="fixed inset-0 bg-rose-900/60 hidden z-[100] backdrop-blur-md flex items-end sm:items-center justify-center p-0 sm:p-4">
-        <div class="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-lg max-h-[95vh] overflow-hidden shadow-2xl relative animate-slide-up">
-            <button onclick="closeModal()" class="absolute top-4 right-4 bg-white/90 rounded-full w-10 h-10 flex items-center justify-center text-rose-500 hover:bg-rose-500 hover:text-white transition-all z-20 shadow-lg">
-                <i class="fas fa-times"></i>
-            </button>
-            <div id="modal-content" class="overflow-y-auto max-h-[95vh] custom-scrollbar"></div>
+    <div id="modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-6 bg-slate-900/30 backdrop-blur-md">
+        <div class="bg-white rounded-[3rem] w-full max-w-lg overflow-hidden shadow-2xl transition-all scale-95 opacity-0" id="modalContainer">
+            <div id="modalContent"></div>
         </div>
     </div>
 
     <script>
-        const FALLBACK_IMG = "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&auto=format&fit=crop";
+        const rawData = [
+            // MUSEOS (35)
+            { id: 1, name: "Museo Jumex", category: "museos", description: "Referente del arte contemporáneo en un recinto de arquitectura icónica.", location: "Polanco, CDMX", img: "https://images.unsplash.com/photo-1554907984-15263bfd63bd?w=800" },
+            { id: 2, name: "Museo Frida Kahlo", category: "museos", description: "La famosa 'Casa Azul' donde vivió la artista.", location: "Coyoacán, CDMX", img: "https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8?w=800" },
+            { id: 3, name: "Castillo de Chapultepec", category: "museos", description: "Unico castillo real en América, hoy Museo de Historia.", location: "Chapultepec, CDMX", img: "https://images.unsplash.com/photo-1585647347384-2593bc35786b?w=800" },
+            { id: 4, name: "Museo Soumaya", category: "museos", description: "Impresionante colección de arte europeo y mexicano.", location: "Polanco, CDMX", img: "https://images.unsplash.com/photo-1518101645466-7795885ff8f8?w=800" },
+            { id: 5, name: "MUNAL", category: "museos", description: "Arquitectura renacentista y obras maestras mexicanas.", location: "Centro, CDMX", img: "https://images.unsplash.com/photo-1594142561930-746733237930?w=800" },
+            { id: 6, name: "Planetario Luis Enrique Erro", category: "museos", description: "El primer planetario de México, ideal para ver estrellas.", location: "Zacatenco, CDMX", img: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=800" },
+            { id: 7, name: "Museo Franz Mayer", category: "museos", description: "Museo de artes decorativas con un jardín central hermoso.", location: "Centro, CDMX", img: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=800" },
+            { id: 8, name: "Casa Luis Barragán", category: "museos", description: "Patrimonio de la Humanidad por su uso único del color.", location: "Miguel Hidalgo, CDMX", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Casa_Luis_Barragan.jpg/800px-Casa_Luis_Barragan.jpg" }, 
+            { id: 9, name: "Museo del Templo Mayor", category: "museos", description: "Ruinas arqueológicas del corazón de Tenochtitlan.", location: "Centro, CDMX", img: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=800" },
+            { id: 10, name: "Universum UNAM", category: "museos", description: "Museo de las Ciencias interactivo para curiosos.", location: "CU, CDMX", img: "https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?w=800" },
+            { id: 11, name: "Museo del Tequila y el Mezcal", category: "museos", description: "Cultura de destilados en la emblemática Plaza Garibaldi.", location: "Centro, CDMX", img: "https://images.unsplash.com/photo-1516535794938-6063878f08cc?w=800" },
+            { id: 12, name: "Museo de Antropología", category: "museos", description: "Tesoro cultural del México prehispánico.", location: "Chapultepec, CDMX", img: "https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?w=800" },
+            { id: 13, name: "Colegio de San Ildefonso", category: "museos", description: "Cuna del muralismo mexicano en el centro histórico.", location: "Centro, CDMX", img: "https://images.unsplash.com/photo-1566121933407-3c7ccdd26763?w=800" },
+            { id: 14, name: "Arte Moderno (MAM)", category: "museos", description: "Exposiciones de vanguardia y un jardín de esculturas.", location: "Chapultepec, CDMX", img: "https://images.unsplash.com/photo-1541963463532-d68292c34b19?w=800" },
+            { id: 15, name: "Museo Dolores Olmedo", category: "museos", description: "Casa de arte, xoloitzcuintles y pavos reales.", location: "Xochimilco, CDMX", img: "https://images.unsplash.com/photo-1549490349-8643362247b5?w=800" },
+            { id: 16, name: "MUAC", category: "museos", description: "Espacio moderno para el arte contemporáneo internacional.", location: "CU, CDMX", img: "https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?w=800" },
+            { id: 17, name: "Papalote Museo del Niño", category: "museos", description: "Toco, juego y aprendo en este espacio interactivo.", location: "Chapultepec, CDMX", img: "https://images.unsplash.com/photo-1505330622279-bf7d7fc918f4?w=800" },
+            { id: 18, name: "Museo de la Estampa", category: "museos", description: "Dedicado a la conservación de la gráfica y el grabado.", location: "Centro, CDMX", img: "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=800" },
+            { id: 19, name: "Centro Cultural Digital", category: "museos", description: "Ubicado bajo la Estela de Luz, explora el arte digital.", location: "Chapultepec, CDMX", img: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800" },
+            { id: 20, name: "Los Pinos", category: "museos", description: "Espacio público cultural en la antigua residencia presidencial.", location: "Chapultepec, CDMX", img: "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=800" },
+            { id: 21, name: "Museo de Cera", category: "museos", description: "Figuras hiperrealistas de personajes famosos.", location: "Juárez, CDMX", img: "https://images.unsplash.com/photo-1544320438-70678d91a90d?w=800" },
+            { id: 22, name: "Museo de la Acuarela", category: "museos", description: "El primer museo del mundo dedicado a esta técnica.", location: "Coyoacán, CDMX", img: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800" },
+            { id: 23, name: "San Carlos", category: "museos", description: "Escuela histórica de artes con galerías impresionantes.", location: "Centro, CDMX", img: "https://images.unsplash.com/photo-1491243959139-d16494c7767d?w=800" },
+            { id: 24, name: "Memoria y Tolerancia", category: "museos", description: "Espacio de reflexión sobre los derechos humanos.", location: "Centro, CDMX", img: "https://images.unsplash.com/photo-1560523132-35919630c793?w=800" },
+            { id: 25, name: "Culturas Populares", category: "museos", description: "Muestras de la diversidad cultural de México.", location: "Coyoacán, CDMX", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Museo_Nacional_de_Culturas_Populares_2018.jpg/800px-Museo_Nacional_de_Culturas_Populares_2018.jpg" }, 
+            { id: 26, name: "Anahuacalli", category: "museos", description: "Construido por Diego Rivera para albergar arte prehispánico.", location: "Coyoacán, CDMX", img: "https://images.unsplash.com/photo-1552083375-1447ce886485?w=800" },
+            { id: 27, name: "Museo Tamayo", category: "museos", description: "Arte contemporáneo internacional en un edificio brutalista.", location: "Chapultepec, CDMX", img: "https://images.unsplash.com/photo-1508333706533-1ab43ecb1606?w=800" },
+            { id: 28, name: "El Eco", category: "museos", description: "Espacio donde la arquitectura y el arte se funden.", location: "San Rafael, CDMX", img: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800" },
+            { id: 29, name: "Artes Vivas", category: "museos", description: "Espacio dedicado a la creatividad y expresión en Coyoacán.", location: "Coyoacán, CDMX", img: "https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?w=800" }, 
+            { id: 30, name: "Arte Popular", category: "museos", description: "Hogar de alebrijes y artesanía monumental mexicana.", location: "Centro, CDMX", img: "https://images.unsplash.com/photo-1561055657-b9e0bf0fa360?w=800" },
+            { id: 31, name: "Numismático Nacional", category: "museos", description: "Antigua Casa de Moneda de México en un edificio histórico.", location: "Centro, CDMX", img: "https://images.unsplash.com/photo-1584285418504-0051b3d377b2?w=800" },
+            { id: 32, name: "Estudio Diego y Frida", category: "museos", description: "Espacio funcionalista icónico en San Ángel.", location: "San Ángel, CDMX", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Estudio_Diego_Rivera_y_Frida_Kahlo.JPG/800px-Estudio_Diego_Rivera_y_Frida_Kahlo.JPG" }, 
+            { id: 33, name: "Culturas del Mundo", category: "museos", description: "Recorrido por civilizaciones globales en la calle de Moneda.", location: "Centro, CDMX", img: "https://images.unsplash.com/photo-1524813686514-a57563d77965?w=800" },
+            { id: 34, name: "Museo del Ejército", category: "museos", description: "Historia militar mexicana a través de los años.", location: "Centro, CDMX", img: "https://images.unsplash.com/photo-1512418490979-92798ccc93a0?w=800" },
+            { id: 35, name: "Bellas Artes", category: "museos", description: "Máxima casa de la cultura en México.", location: "Centro, CDMX", img: "https://images.unsplash.com/photo-1585464231875-d9ef1f5ad396?w=800" },
 
-        const rawPlaces = [
-            { id: 1, name: "Museo Jumex", category: "museos", description: "Referente del arte contemporáneo en un recinto de arquitectura icónica.", location: "Polanco, CDMX", maps: "https://www.google.com/maps/search/Museo+Jumex", img: "https://images.unsplash.com/photo-1554907984-15263bfd63bd?w=600" },
-            { id: 2, name: "Museo Frida Kahlo", category: "museos", description: "La famosa 'Casa Azul' donde vivió la artista.", location: "Coyoacán, CDMX", maps: "https://www.google.com/maps/search/Museo+Frida+Kahlo", img: "https://images.unsplash.com/photo-1518998053574-53ee7511c73b?w=600" },
-            { id: 3, name: "Snowpink Bingsu", category: "cafeterias", description: "Postres coreanos (Bingsu) y bebidas aesthetic.", location: "Juárez, CDMX", maps: "https://www.google.com/maps/search/Snowpink+CDMX", img: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=600" },
-            { id: 4, name: "Snow Milk Teas", category: "cafeterias", description: "Especialistas en tés de leche y perlas de tapioca de alta calidad.", location: "Varias Sucursales", maps: "https://www.google.com/maps/search/Snow+Milk+Teas", img: "https://images.unsplash.com/photo-1544259506-69634f19b168?w=600" },
-            { id: 5, name: "Museo Nacional de Historia", category: "museos", description: "Ubicado en el Castillo de Chapultepec, ofrece vistas panorámicas de la ciudad.", location: "Chapultepec, CDMX", maps: "https://www.google.com/maps/search/Castillo+de+Chapultepec", img: "https://images.unsplash.com/photo-1585647347384-2593bc35786b?w=600" },
-            { id: 6, name: "Bioparque Estrella", category: "parques", description: "Safari interactivo y conservación de especies.", location: "Chapa de Mota, EdoMex", maps: "https://www.google.com/maps/search/Bioparque+Estrella", img: "https://images.unsplash.com/photo-1549366021-9f761d450615?w=600" },
-            { id: 7, name: "Museo Soumaya", category: "museos", description: "Impresionante colección de arte europeo y mexicano.", location: "Plaza Carso, CDMX", maps: "https://www.google.com/maps/search/Museo+Soumaya", img: "https://images.unsplash.com/photo-1621640161421-4f164749f191?w=600" },
-            { id: 8, name: "Tepoztlán Pueblo Mágico", category: "pueblos", description: "Misticismo, caminata al Tepozteco y comida tradicional.", location: "Morelos", maps: "https://www.google.com/maps/search/Tepoztlan+Morelos", img: "https://images.unsplash.com/photo-1595116743431-7e8751528657?w=600" },
-            { id: 9, name: "Parque Masayoshi Ohira", category: "parques", description: "Un jardín con puentes y vegetación estilo japonés.", location: "Coyoacán, CDMX", maps: "https://www.google.com/maps/search/Parque+Masayoshi+Ohira", img: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=600" },
-            { id: 10, name: "Hello Kitty Café México", category: "cafeterias", description: "Experiencia culinaria temática de Sanrio.", location: "Polanco, CDMX", maps: "https://www.google.com/maps/search/Hello+Kitty+Cafe+CDMX", img: "https://images.unsplash.com/photo-1517705008128-361805f42e86?w=600" },
-            { id: 21, name: "Acuario Inbursa", category: "acuarios", description: "Vida marina profunda en el corazón de la ciudad.", location: "Polanco, CDMX", maps: "https://www.google.com/maps/search/Acuario+Inbursa", img: "https://images.unsplash.com/photo-1501443762994-82bd5dabb892?w=600" },
-            { id: 71, name: "Acuario Michin CDMX", category: "acuarios", description: "Acuario interactivo con granjas y muros de escalar.", location: "Encuentro Oceanía, CDMX", maps: "https://www.google.com/maps/search/Acuario+Michin+CDMX", img: "https://images.unsplash.com/photo-1534329245551-87a2da885068?w=600" },
-            { id: 11, name: "Huasca de Ocampo", category: "pueblos", description: "Prismas Basálticos y el museo de los duendes.", location: "Hidalgo", maps: "https://www.google.com/maps/search/Huasca+de+Ocampo", img: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600" },
-            { id: 12, name: "Kura Izakaya", category: "comida", description: "Taberna japonesa con platillos auténticos y atmósfera tradicional.", location: "Roma Norte, CDMX", maps: "https://www.google.com/maps/search/Kura+Izakaya+Roma", img: "https://images.unsplash.com/photo-1493770348161-369560ae357d?w=600" },
-            { id: 13, name: "Museo Nacional de Arte (MUNAL)", category: "museos", description: "Arquitectura renacentista y obras maestras mexicanas.", location: "Centro Histórico, CDMX", maps: "https://www.google.com/maps/search/MUNAL", img: "https://images.unsplash.com/photo-1543857182-019678c39bf9?w=600" },
-            { id: 14, name: "Peña de Bernal", category: "pueblos", description: "Uno de los monolitos más grandes del mundo.", location: "Querétaro", maps: "https://www.google.com/maps/search/Peña+de+Bernal", img: "https://images.unsplash.com/photo-1512418490979-92798ccc93a0?w=600" },
-            { id: 15, name: "Parque La Mexicana", category: "parques", description: "Pulmón verde moderno con áreas para picnic y deportes.", location: "Santa Fe, CDMX", maps: "https://www.google.com/maps/search/Parque+La+Mexicana", img: "https://images.unsplash.com/photo-1596438459194-f275f413d6ff?w=600" },
-            { id: 16, name: "Midam BBQ Coreano", category: "comida", description: "Parrillada coreana premium.", location: "Polanco, CDMX", maps: "https://www.google.com/maps/search/Midam+Polanco", img: "https://images.unsplash.com/photo-1498654896293-37aacf113fd9?w=600" },
-            { id: 17, name: "Planetario Luis Enrique Erro", category: "museos", description: "El primer planetario de México, ideal para ver estrellas.", location: "Zacatenco, CDMX", maps: "https://www.google.com/maps/search/Planetario+Luis+Enrique+Erro", img: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=600" },
-            { id: 18, name: "Mineral del Chico", category: "pueblos", description: "Paisajes boscosos y actividades de montaña.", location: "Hidalgo", maps: "https://www.google.com/maps/search/Mineral+del+Chico", img: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600" },
-            { id: 19, name: "Museo Franz Mayer", category: "museos", description: "Museo de artes decorativas con un jardín central hermoso.", location: "Centro Histórico, CDMX", maps: "https://www.google.com/maps/search/Museo+Franz+Mayer", img: "https://images.unsplash.com/photo-1517705008128-361805f42e86?w=600" },
-            { id: 20, name: "Casa Luis Barragán", category: "museos", description: "Patrimonio de la Humanidad por su uso único del color.", location: "San Miguel Chapultepec", maps: "https://www.google.com/maps/search/Casa+Luis+Barragan", img: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600" },
-            { id: 22, name: "Viveros de Coyoacán", category: "parques", description: "Sendero arbolado perfecto para caminar y relajarse.", location: "Coyoacán, CDMX", maps: "https://www.google.com/maps/search/Viveros+de+Coyoacan", img: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600" },
-            { id: 23, name: "Museo del Templo Mayor", category: "museos", description: "Ruinas arqueológicas del corazón de Tenochtitlan.", location: "Zócalo, CDMX", maps: "https://www.google.com/maps/search/Museo+Templo+Mayor", img: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600" },
-            { id: 25, name: "Universum UNAM", category: "museos", description: "Museo de las Ciencias interactivo.", location: "Ciudad Universitaria, CDMX", maps: "https://www.google.com/maps/search/Universum+UNAM", img: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=600" },
-            { id: 26, name: "Yamasan Ramen House", category: "comida", description: "Tazones de ramen artesanal con recetas exclusivas.", location: "Condesa, CDMX", maps: "https://www.google.com/maps/search/Yamasan+Ramen+Condesa", img: "https://images.unsplash.com/photo-1557872245-741f409da216?w=600" },
-            { id: 27, name: "Parque Hundido", category: "parques", description: "Jardín con relieves prehispánicos y reloj floral.", location: "Benito Juárez, CDMX", maps: "https://www.google.com/maps/search/Parque+Hundido", img: "https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=600" },
-            { id: 28, name: "Valle de Bravo", category: "pueblos", description: "Lago artificial, deportes acuáticos y atardeceres de ensueño.", location: "EdoMex", maps: "https://www.google.com/maps/search/Valle+de+Bravo", img: "https://images.unsplash.com/photo-1469474099711-423506439364?w=600" },
-            { id: 29, name: "Museo del Tequila y el Mezcal", category: "museos", description: "Cultura de destilados en la emblemática Plaza Garibaldi.", location: "Garibaldi, CDMX", maps: "https://www.google.com/maps/search/Museo+del+Tequila+Garibaldi", img: "https://images.unsplash.com/photo-1516939884455-1445c8652f83?w=600" },
-            { id: 30, name: "Incantatum Bar & Café", category: "cafeterias", description: "Experiencia mágica inspirada en el mundo de los magos.", location: "Juárez, CDMX", maps: "https://www.google.com/maps/search/Incantatum+Roma", img: "https://images.unsplash.com/photo-1547394765-185e1e68f34e?w=600" },
-            { id: 31, name: "Museo Nacional de Antropología", category: "museos", description: "Tesoro cultural del México prehispánico.", location: "Chapultepec, CDMX", maps: "https://www.google.com/maps/search/Museo+Antropologia+CDMX", img: "https://images.unsplash.com/photo-1518998053574-53ee7511c73b?w=600" },
-            { id: 32, name: "Gori Gori Ramen", category: "comida", description: "Fideos al estilo 'delivery' pero servidos con gran estilo.", location: "Varias Sucursales", maps: "https://www.google.com/maps/search/Gori+Gori+Ramen", img: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=600" },
-            { id: 33, name: "Desierto de los Leones", category: "parques", description: "Primer Parque Nacional de México con un monasterio histórico.", location: "Cuajimalpa, CDMX", maps: "https://www.google.com/maps/search/Desierto+de+los+Leones", img: "https://images.unsplash.com/photo-1448375240586-882707db888b?w=600" },
-            { id: 34, name: "Antiguo Colegio de San Ildefonso", category: "museos", description: "Cuna del muralismo mexicano.", location: "Centro Histórico, CDMX", maps: "https://www.google.com/maps/search/San+Ildefonso", img: "https://images.unsplash.com/photo-1565039083238-66f81e8f2677?w=600" },
-            { id: 35, name: "Casa Snoopy (Peanuts)", category: "cafeterias", description: "Cafetería temática del famoso perrito y sus amigos.", location: "Condesa, CDMX", maps: "https://www.google.com/maps/search/Casa+Snoopy+Condesa", img: "https://images.unsplash.com/photo-1544145945-f904253db0ad?w=600" },
-            { id: 36, name: "Real del Monte", category: "pueblos", description: "Pueblo minero conocido por sus tradicionales pastes.", location: "Hidalgo", maps: "https://www.google.com/maps/search/Real+del+Monte", img: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600" },
-            { id: 37, name: "Museo de Arte Moderno (MAM)", category: "museos", description: "Exposiciones de vanguardia y un jardín de esculturas.", location: "Chapultepec, CDMX", maps: "https://www.google.com/maps/search/Museo+Arte+Moderno+CDMX", img: "https://images.unsplash.com/photo-1514195037031-83d60ed3b448?w=600" },
-            { id: 38, name: "K-Pop Ramen", category: "comida", description: "Comida coreana con proyección de videos musicales K-Pop.", location: "Juárez, CDMX", maps: "https://www.google.com/maps/search/K+Pop+Ramen+CDMX", img: "https://images.unsplash.com/photo-1511690656952-34342bb7c2f2?w=600" },
-            { id: 39, name: "Audiorama Chapultepec", category: "parques", description: "Rincón oculto en el bosque para escuchar música clásica.", location: "Chapultepec, CDMX", maps: "https://www.google.com/maps/search/Audiorama+Chapultepec", img: "https://images.unsplash.com/photo-1444021465936-c6ca81d39b84?w=600" },
-            { id: 40, name: "Basílica de Santa María de Guadalupe", category: "especiales", description: "Uno de los santuarios más visitados del mundo.", location: "Gustavo A. Madero, CDMX", maps: "https://www.google.com/maps/search/Basilica+de+Guadalupe", img: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600" },
-            { id: 41, name: "Museo Dolores Olmedo", category: "museos", description: "Casa de arte, xoloitzcuintles y pavos reales.", location: "Xochimilco, CDMX", maps: "https://www.google.com/maps/search/Museo+Dolores+Olmedo", img: "https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?w=600" },
-            { id: 42, name: "Hachi Coffee", category: "cafeterias", description: "One piece cafe tematico.", location: "Coyoacán, CDMX", maps: "https://www.google.com/maps/search/Hachi+Coffee+CDMX", img: "https://images.unsplash.com/photo-1520201163981-8cc95007dd2a?w=600" },
-            { id: 43, name: "Malinalco Pueblo Mágico", category: "pueblos", description: "Zona arqueológica única tallada en el cerro.", location: "EdoMex", maps: "https://www.google.com/maps/search/Malinalco", img: "https://images.unsplash.com/photo-1544967082-d9d25d867d66?w=600" },
-            { id: 44, name: "Fuente de Tláloc", category: "parques", description: "Mural subacuático de Diego Rivera en Cárcamo de Dolores.", location: "Chapultepec II, CDMX", maps: "https://www.google.com/maps/search/Fuente+de+Tlaloc", img: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600" },
-            { id: 45, name: "Museo Universitario Arte Contemporáneo (MUAC)", category: "museos", description: "Espacio moderno para el arte contemporáneo internacional.", location: "CU, CDMX", maps: "https://www.google.com/maps/search/MUAC+UNAM", img: "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=600" },
-            { id: 46, name: "Mog Bistro", category: "comida", description: "Cocina asiática fusión con ingredientes frescos.", location: "Roma Norte, CDMX", maps: "https://www.google.com/maps/search/Mog+Bistro+Roma", img: "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=600" },
-            { id: 47, name: "Parque México", category: "parques", description: "Icono de la Condesa para caminar y disfrutar la naturaleza urbana.", location: "Hipódromo Condesa, CDMX", maps: "https://www.google.com/maps/search/Parque+Mexico", img: "https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=600" },
-            { id: 48, name: "Palacio de Bellas Artes", category: "museos", description: "Máxima casa de la cultura en México.", location: "Centro Histórico, CDMX", maps: "https://www.google.com/maps/search/Palacio+de+Bellas+Artes", img: "https://images.unsplash.com/photo-1585647347384-2593bc35786b?w=600" },
-            { id: 49, name: "Down The Rabbit Hole", category: "cafeterias", description: "Cafetería inspirada en Alicia en el País de las Maravillas.", location: "Narvarte, CDMX", maps: "https://www.google.com/maps/search/Down+the+Rabbit+Hole+Cafe", img: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600" },
-            { id: 50, name: "Sub-Noodle Bar", category: "comida", description: "Noodles y ramen estilo callejero pero con toque gourmet.", location: "Roma, CDMX", maps: "https://www.google.com/maps/search/Sub+Noodle+Bar", img: "https://images.unsplash.com/photo-1552611052-33e04de081de?w=600" },
-            { id: 51, name: "Papalote Museo del Niño", category: "museos", description: "Espacio interactivo de aprendizaje.", location: "Chapultepec, CDMX", maps: "https://www.google.com/maps/search/Papalote+Museo", img: "https://images.unsplash.com/photo-1564981797816-1043664bf78d?w=600" },
-            { id: 52, name: "Museo Nacional de la Estampa", category: "museos", description: "Dedicado a la conservación de la gráfica y el grabado.", location: "Centro, CDMX", maps: "https://www.google.com/maps/search/Museo+de+la+Estampa", img: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=600" },
-            { id: 53, name: "Centro Cultural Digital", category: "museos", description: "Ubicado bajo la Estela de Luz, explora el arte digital.", location: "Chapultepec, CDMX", maps: "https://www.google.com/maps/search/Centro+Cultural+Digital", img: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600" },
-            { id: 54, name: "Inari Cafe", category: "cafeterias", description: "Repostería temática y cafés de especialidad.", location: "Coyoacán, CDMX", maps: "https://www.google.com/maps/search/Inari+Cafe+CDMX", img: "https://images.unsplash.com/photo-1528698827591-e19ccd7bc23d?w=600" },
-            { id: 55, name: "Centro Cultural Los Pinos", category: "museos", description: "Espacio público cultural en la antigua residencia presidencial.", location: "Chapultepec, CDMX", maps: "https://www.google.com/maps/search/Los+Pinos+CDMX", img: "https://images.unsplash.com/photo-1512418490979-92798ccc93a0?w=600" },
-            { id: 56, name: "Museo de Cera de la CDMX", category: "museos", description: "Figuras hiperrealistas de personajes famosos.", location: "Juárez, CDMX", maps: "https://www.google.com/maps/search/Museo+de+Cera+CDMX", img: "https://images.unsplash.com/photo-1561839561-b13bcfe95249?w=600" },
-            { id: 57, name: "Museo Nacional de la Acuarela", category: "museos", description: "El primer museo del mundo dedicado a esta técnica.", location: "Coyoacán, CDMX", maps: "https://www.google.com/maps/search/Museo+de+la+Acuarela", img: "https://images.unsplash.com/photo-1541963463532-d68292c34b19?w=600" },
-            { id: 58, name: "Academia de San Carlos", category: "museos", description: "Escuela histórica de artes con galerías impresionantes.", location: "Centro, CDMX", maps: "https://www.google.com/maps/search/Academia+de+San+Carlos", img: "https://images.unsplash.com/photo-1554188248-986adbb73be4?w=600" },
-            { id: 59, name: "Museo Memoria y Tolerancia", category: "museos", description: "Espacio de reflexión sobre los derechos humanos.", location: "Centro, CDMX", maps: "https://www.google.com/maps/search/Museo+Memoria+y+Tolerancia", img: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=600" },
-            { id: 60, name: "Museo Nacional de Culturas Populares", category: "museos", description: "Muestras de la diversidad cultural de México.", location: "Coyoacán, CDMX", maps: "https://www.google.com/maps/search/Museo+Culturas+Populares", img: "https://images.unsplash.com/photo-1533154683836-84ea7a0bc310?w=600" },
-            { id: 61, name: "Museo Anahuacalli", category: "museos", description: "Construido por Diego Rivera para albergar arte prehispánico.", location: "Coyoacán, CDMX", maps: "https://www.google.com/maps/search/Museo+Anahuacalli", img: "https://images.unsplash.com/photo-1518998053574-53ee7511c73b?w=600" },
-            { id: 62, name: "Museo Tamayo", category: "museos", description: "Arte contemporáneo internacional.", location: "Chapultepec, CDMX", maps: "https://www.google.com/maps/search/Museo+Tamayo", img: "https://images.unsplash.com/photo-1554907984-15263bfd63bd?w=600" },
-            { id: 63, name: "Museo Experimental El Eco", category: "museos", description: "Espacio donde la arquitectura y el arte se funden.", location: "San Rafael, CDMX", maps: "https://www.google.com/maps/search/Museo+El+Eco", img: "https://images.unsplash.com/photo-1514361892635-6b07e31e75f9?w=600" },
-            { id: 64, name: "Restaurante Bestia", category: "comida", description: "Sabor audaz y ambiente vibrante.", location: "Polanco, CDMX", maps: "https://www.google.com/maps/search/Bestial+by+Rosy", img: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=600" },
-            { id: 65, name: "Centro de Artes Vivas", category: "museos", description: "Espacio dedicado a la creatividad y expresión.", location: "San Ángel, CDMX", maps: "https://www.google.com/maps/search/Centro+de+Artes+Vivas", img: "https://images.unsplash.com/photo-1499781350541-7783f6c6a0c8?w=600" },
-            { id: 66, name: "Museo de Arte Popular", category: "museos", description: "Hogar de alebrijes y artesanía monumental.", location: "Centro, CDMX", maps: "https://www.google.com/maps/search/Museo+de+Arte+Popular", img: "https://images.unsplash.com/photo-1544967082-d9d25d867d66?w=600" },
-            { id: 67, name: "Museo Numismático Nacional", category: "museos", description: "Antigua Casa de Moneda de México.", location: "Centro, CDMX", maps: "https://www.google.com/maps/search/Museo+Numismatico", img: "https://images.unsplash.com/photo-1580519542036-c47de6196ba5?w=600" },
-            { id: 68, name: "Museo Casa Estudio Diego Rivera y Frida Kahlo", category: "museos", description: "Espacio funcionalista icónico.", location: "San Ángel, CDMX", maps: "https://www.google.com/maps/search/Casa+Estudio+Diego+Rivera", img: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600" },
-            { id: 69, name: "Museo Nacional de las Culturas del Mundo", category: "museos", description: "Recorrido por civilizaciones globales.", location: "Centro, CDMX", maps: "https://www.google.com/maps/search/Museo+Nacional+de+las+Culturas", img: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600" },
-            { id: 70, name: "Museo del Ejército y Fuerza Aérea", category: "museos", description: "Historia militar mexicana.", location: "Centro Histórico, CDMX", maps: "https://www.google.com/maps/search/Museo+del+Ejercito", img: "https://images.unsplash.com/photo-1590247813693-5541d1c609fd?w=600" }
+            // CAFETERÍAS (8)
+            { id: 36, name: "Snowpink Bingsu", category: "cafeterias", description: "Postres coreanos (Bingsu) y bebidas aesthetic.", location: "Juárez, CDMX", img: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=800" },
+            { id: 37, name: "Snow Milk Teas", category: "cafeterias", description: "Especialistas en tés de leche y perlas de tapioca.", location: "CDMX", img: "https://images.unsplash.com/photo-1558857563-b371f31ca704?w=800" },
+            { id: 38, name: "Hello Kitty Café", category: "cafeterias", description: "Experiencia culinaria temática de Sanrio.", location: "Polanco, CDMX", img: "https://images.unsplash.com/photo-1517705008128-361805f42e86?w=800" },
+            { id: 39, name: "Incantatum Café", category: "cafeterias", description: "Experiencia mágica inspirada en el mundo de los magos.", location: "CDMX", img: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=800" },
+            { id: 40, name: "Casa Snoopy", category: "cafeterias", description: "Cafetería temática del famoso perrito y sus amigos.", location: "CDMX", img: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=800" },
+            { id: 41, name: "Hachi Coffee", category: "cafeterias", description: "Influencia japonesa y especialidad en barismo.", location: "CDMX", img: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800" },
+            { id: 42, name: "Down The Rabbit Hole", category: "cafeterias", description: "Cafetería inspirada en Alicia en el País de las Maravillas.", location: "Col. Álamos, CDMX", img: "https://i.pinimg.com/736x/88/44/14/884414e2776c29b71f985b9679f1689b.jpg" }, 
+            { id: 43, name: "Inari Cafe", category: "cafeterias", description: "Repostería temática y cafés de especialidad.", location: "CDMX", img: "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=800" },
+
+            // PARQUES (9)
+            { id: 44, name: "Bioparque Estrella", category: "parques", description: "Safari interactivo y conservación de especies.", location: "Edo Mex", img: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=800" },
+            { id: 45, name: "Masayoshi Ohira", category: "parques", description: "Un jardín con puentes y vegetación estilo japonés.", location: "Coyoacán, CDMX", img: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800" },
+            { id: 46, name: "Parque La Mexicana", category: "parques", description: "Pulmón verde moderno con áreas para picnic y deportes.", location: "Santa Fe, CDMX", img: "https://images.unsplash.com/photo-1500382017468-9049fee74a62?w=800" },
+            { id: 47, name: "Viveros de Coyoacán", category: "parques", description: "Sendero arbolado perfecto para caminar y relajarse.", location: "Coyoacán, CDMX", img: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800" },
+            { id: 48, name: "Parque Hundido", category: "parques", description: "Jardín con relieves prehispánicos y reloj floral.", location: "CDMX", img: "https://images.unsplash.com/photo-1519331379826-f10be5486c6f?w=800" },
+            { id: 49, name: "Desierto de los Leones", category: "parques", description: "Primer Parque Nacional de México con un monasterio histórico.", location: "CDMX", img: "https://images.unsplash.com/photo-1473448912268-2022ce9509d8?w=800" },
+            { id: 50, name: "Audiorama", category: "parques", description: "Rincón oculto en el bosque para escuchar música clásica.", location: "Chapultepec, CDMX", img: "https://mxcity.mx/wp-content/uploads/2014/11/audiorama.jpg" }, 
+            { id: 51, name: "Fuente de Tláloc", category: "parques", description: "Mural subacuático de Diego Rivera en Cárcamo de Dolores.", location: "Chapultepec, CDMX", img: "https://images.unsplash.com/photo-1549490349-8643362247b5?w=800" },
+            { id: 52, name: "Parque México", category: "parques", description: "Icono de la Condesa para caminar y disfrutar la naturaleza urbana.", location: "Condesa, CDMX", img: "https://images.unsplash.com/photo-1520114878144-6123749968dd?w=800" },
+
+            // COMIDA (8)
+            { id: 53, name: "Kura Izakaya", category: "comida", description: "Taberna japonesa con platillos auténticos.", location: "Roma Norte, CDMX", img: "https://images.unsplash.com/photo-1580822184713-fc5400e7fe10?w=800" },
+            { id: 54, name: "Midam BBQ", category: "comida", description: "Parrillada coreana premium en Polanco.", location: "Polanco, CDMX", img: "https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?w=800" },
+            { id: 55, name: "Yamasan Ramen", category: "comida", description: "Tazones de ramen artesanal con recetas exclusivas.", location: "CDMX", img: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=800" },
+            { id: 56, name: "Gori Gori Ramen", category: "comida", description: "Fideos al estilo 'delivery' pero servidos con gran estilo.", location: "CDMX", img: "https://images.unsplash.com/photo-1552611052-33e04de081de?w=800" },
+            { id: 57, name: "K-Pop Ramen", category: "comida", description: "Comida coreana con proyección de videos K-Pop.", location: "CDMX", img: "https://images.unsplash.com/photo-1512058560366-cd2429fb5c6f?w=800" },
+            { id: 58, name: "Mog Bistro", category: "comida", description: "Cocina asiática fusión con ingredientes frescos.", location: "CDMX", img: "https://images.unsplash.com/photo-1534422298391-e4f8c170db06?w=800" },
+            { id: 59, name: "Sub-Noodle Bar", category: "comida", description: "Noodles y ramen estilo callejero pero con toque gourmet.", location: "CDMX", img: "https://images.unsplash.com/photo-1526318896980-cf78c088247c?w=800" },
+            { id: 60, name: "Restaurante Bestia", category: "comida", description: "Sabor audaz y ambiente vibrante en Polanco.", location: "Polanco, CDMX", img: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800" },
+
+            // PUEBLOS (7)
+            { id: 61, name: "Tepoztlán", category: "pueblos", description: "Misticismo, caminata al Tepozteco y comida tradicional.", location: "Morelos", img: "https://images.unsplash.com/photo-1595116743431-7e8751528657?w=800" },
+            { id: 62, name: "Huasca de Ocampo", category: "pueblos", description: "Prismas Basálticos y el museo de los duendes.", location: "Hidalgo", img: "https://images.unsplash.com/photo-1527443154391-507e9dc6c5cc?w=800" },
+            { id: 63, name: "Peña de Bernal", category: "pueblos", description: "Uno de los monolitos más grandes del mundo.", location: "Querétaro", img: "https://images.unsplash.com/photo-1578330132822-0196887afecb?w=800" },
+            { id: 64, name: "Mineral del Chico", category: "pueblos", description: "Paisajes boscosos y actividades de montaña.", location: "Hidalgo", img: "https://images.unsplash.com/photo-1444464666168-49d633b867ad?w=800" },
+            { id: 65, name: "Valle de Bravo", category: "pueblos", description: "Lago artificial, deportes acuáticos y atardeceres.", location: "Edo Mex", img: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800" },
+            { id: 66, name: "Real del Monte", category: "pueblos", description: "Pueblo minero conocido por sus tradicionales pastes.", location: "Hidalgo", img: "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?w=800" },
+            { id: 67, name: "Malinalco", category: "pueblos", description: "Zona arqueológica única tallada en el cerro.", location: "Edo Mex", img: "https://images.unsplash.com/photo-1606298244116-0141a44cd3c0?w=800" },
+
+            // ACUARIOS (2)
+            { id: 68, name: "Acuario Inbursa", category: "acuarios", description: "Vida marina profunda en el corazón de la ciudad.", location: "Polanco, CDMX", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Acuario_Inbursa_2015.JPG/800px-Acuario_Inbursa_2015.JPG" }, 
+            { id: 69, name: "Acuario Michin", category: "acuarios", description: "Acuario interactivo con granjas y muros de escalar.", location: "CDMX", img: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800" },
+
+            // ESPECIALES (1)
+            { id: 70, name: "Basílica de Guadalupe", category: "especiales", description: "Uno de los santuarios más visitados del mundo.", location: "CDMX", img: "https://images.unsplash.com/photo-1610123598195-90f15509599a?w=800" } 
         ];
 
-        // Ordenar alfabéticamente la lista original una sola vez al cargar
-        const places = [...rawPlaces].sort((a, b) => a.name.localeCompare(b.name, 'es', { sensitivity: 'base' }));
+        const categoryLabels = {
+            acuarios: "Acuarios",
+            cafeterias: "Cafecitos",
+            comida: "Comida",
+            especiales: "Especiales",
+            museos: "Museos",
+            parques: "Parques",
+            pueblos: "Pueblos"
+        };
 
-        let completedIds = JSON.parse(localStorage.getItem('my_date_tracker')) || [];
-        let favoriteIds = JSON.parse(localStorage.getItem('my_date_favorites')) || [];
+        let visited = JSON.parse(localStorage.getItem('voyager_v2_visited')) || [];
+        let favorites = JSON.parse(localStorage.getItem('voyager_v2_favs')) || [];
+        let currentFilter = 'all';
 
         function init() {
-            renderPlaces(places);
-            updateProgress();
+            createFilterButtons();
+            renderGrid();
+            updateStats();
         }
 
-        function renderPlaces(data) {
-            const grid = document.getElementById('places-grid');
-            const noResults = document.getElementById('no-results');
+        function createFilterButtons() {
+            const container = document.getElementById('filterContainer');
+            const categories = [...new Set(rawData.map(p => p.category))].sort();
+            
+            categories.forEach(cat => {
+                const btn = document.createElement('button');
+                btn.onclick = () => filterBy(cat);
+                btn.id = `btn-${cat}`;
+                btn.className = 'filter-btn px-6 py-2.5 rounded-full text-[9px] font-bold uppercase tracking-widest bg-white/60 text-slate-500 border border-white shadow-sm';
+                btn.innerText = categoryLabels[cat] || cat;
+                container.appendChild(btn);
+            });
+        }
 
-            if (data.length === 0) {
-                grid.innerHTML = '';
-                noResults.classList.remove('hidden');
+        function filterBy(cat) {
+            currentFilter = cat;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`btn-${cat}`).classList.add('active');
+            renderGrid();
+        }
+
+        function renderGrid() {
+            const grid = document.getElementById('placesGrid');
+            const searchInput = document.getElementById('searchInput');
+            const search = searchInput.value.toLowerCase();
+            
+            // Primero aplicamos búsqueda y filtros de categoría
+            let filtered = rawData.filter(p => {
+                const matchesSearch = p.name.toLowerCase().includes(search) || p.location.toLowerCase().includes(search);
+                const matchesCat = currentFilter === 'all' || 
+                                 (currentFilter === 'favs' && favorites.includes(p.id)) || 
+                                 p.category === currentFilter;
+                return matchesSearch && matchesCat;
+            });
+
+            // Lógica de ordenamiento: 
+            // 1. Los no visitados van primero.
+            // 2. Dentro de cada grupo, ordenamos alfabéticamente.
+            filtered.sort((a, b) => {
+                const aVisited = visited.includes(a.id);
+                const bVisited = visited.includes(b.id);
+                
+                if (aVisited && !bVisited) return 1;  // 'a' es visitado, va después
+                if (!aVisited && bVisited) return -1; // 'a' no es visitado, va antes
+                
+                // Si ambos tienen el mismo estado de visita, ordenar alfabéticamente
+                return a.name.localeCompare(b.name);
+            });
+
+            if (filtered.length === 0) {
+                if (currentFilter === 'favs') {
+                    grid.innerHTML = `
+                        <div class="empty-state">
+                            <div class="text-rose-200 text-6xl mb-6"><i class="fa-solid fa-heart-circle-plus"></i></div>
+                            <h3 class="text-slate-800 font-800 text-xl mb-2 italic accent-font text-3xl">¡Tus favoritos están vacíos!</h3>
+                            <p class="text-slate-400 text-[10px] uppercase font-bold tracking-[0.2em] max-w-xs mx-auto">Busca lugares increíbles y presiona el corazón para guardarlos aquí.</p>
+                        </div>
+                    `;
+                } else {
+                    grid.innerHTML = `
+                        <div class="empty-state">
+                            <div class="text-slate-200 text-6xl mb-6"><i class="fa-solid fa-map-location-dot"></i></div>
+                            <h3 class="text-slate-800 font-800 text-xl mb-2 italic accent-font text-3xl">Sin resultados</h3>
+                            <p class="text-slate-400 text-[10px] uppercase font-bold tracking-[0.2em]">No encontramos nada para Jonathan con "${search}"</p>
+                        </div>
+                    `;
+                }
                 return;
             }
 
-            noResults.classList.add('hidden');
-            grid.innerHTML = data.map((place, index) => {
-                const isCompleted = completedIds.includes(place.id);
-                const isFavorite = favoriteIds.includes(place.id);
+            grid.innerHTML = filtered.map(p => {
+                const isFav = favorites.includes(p.id);
+                const isVisited = visited.includes(p.id);
                 return `
-                <div class="place-card rounded-[2rem] shadow-md border border-rose-100 overflow-hidden relative group ${isCompleted ? 'completed' : ''}" id="card-${place.id}" style="animation: fadeIn 0.4s ease forwards ${index * 0.03}s">
-                    <div class="relative h-48 md:h-56 overflow-hidden">
-                        <img src="${place.img}" 
-                             alt="${place.name}" 
-                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" 
-                             loading="lazy"
-                             onerror="this.onerror=null; this.src='${FALLBACK_IMG}';">
-                        
-                        <button onclick="toggleFavorite(event, ${place.id})" class="fav-btn absolute top-4 left-4 bg-white/90 p-2 rounded-full shadow-lg z-10 ${isFavorite ? 'active text-rose-600' : 'text-gray-400'}">
-                            <i class="${isFavorite ? 'fas' : 'far'} fa-heart text-lg"></i>
-                        </button>
-
-                        <div class="check-badge absolute inset-0 bg-rose-600/30 backdrop-blur-[2px] items-center justify-center">
-                            <div class="bg-white rounded-full p-4 shadow-2xl transform scale-125">
-                                <i class="fas fa-star text-rose-500 text-xl"></i>
+                    <div class="romantic-card rounded-[2.5rem] overflow-hidden flex flex-col ${isVisited ? 'visited-card' : ''}">
+                        <div class="relative h-56 overflow-hidden cursor-pointer" onclick="openModal(${p.id})">
+                            <img src="${p.img}" onerror="this.src='https://images.unsplash.com/photo-1518101645466-7795885ff8f8?w=800'" class="w-full h-full object-cover transition-transform duration-700 hover:scale-110">
+                            <span class="absolute top-4 left-4 px-3 py-1 bg-black/40 backdrop-blur-md rounded-full text-[8px] font-black uppercase tracking-widest text-white">${categoryLabels[p.category]}</span>
+                        </div>
+                        <div class="p-7 flex-grow flex flex-col">
+                            <div class="flex justify-between items-start gap-2 mb-1">
+                                <h3 class="font-800 text-slate-800 text-base leading-tight">${p.name}</h3>
+                                <button onclick="toggleFav(${p.id})" class="text-xl transition-transform active:scale-125 hover:scale-110">
+                                    <i class="fa-solid fa-heart ${isFav ? 'text-rose-500' : 'text-slate-200'}"></i>
+                                </button>
+                            </div>
+                            <p class="text-[9px] font-bold text-rose-400 uppercase tracking-widest mb-6"><i class="fa-solid fa-location-dot"></i> ${p.location}</p>
+                            <div class="mt-auto pt-5 border-t border-rose-50 flex items-center justify-between">
+                                <button onclick="toggleVisited(${p.id})" class="flex items-center gap-2 group">
+                                    <div class="w-7 h-7 rounded-lg border flex items-center justify-center transition-all ${isVisited ? 'bg-rose-500 border-rose-500' : 'border-rose-100 group-hover:border-rose-200'}">
+                                        <i class="fa-solid fa-check text-[10px] text-white ${isVisited ? '' : 'hidden'}"></i>
+                                    </div>
+                                    <span class="text-[9px] font-900 uppercase tracking-tighter ${isVisited ? 'text-rose-500' : 'text-slate-300'}">${isVisited ? 'Visto' : 'Pendiente'}</span>
+                                </button>
+                                <button onclick="openModal(${p.id})" class="text-[9px] font-900 text-rose-300 hover:text-rose-600 uppercase tracking-widest">Info</button>
                             </div>
                         </div>
                     </div>
-                    <div class="p-5 md:p-6">
-                        <div class="flex justify-between items-start mb-2">
-                            <h3 class="font-black text-gray-800 text-lg leading-tight pr-3">${place.name}</h3>
-                            <input type="checkbox" ${isCompleted ? 'checked' : ''} onchange="toggleComplete(${place.id})" class="w-6 h-6 accent-rose-500 rounded-full cursor-pointer shadow-sm">
-                        </div>
-                        <p class="text-[10px] font-black text-rose-500 uppercase tracking-widest mb-3">${place.category}</p>
-                        <div class="flex items-center gap-2 text-gray-500 text-xs mb-5 font-semibold">
-                            <i class="fas fa-location-dot text-rose-400"></i>
-                            <span class="truncate">${place.location}</span>
-                        </div>
-                        <button onclick="openDetails(${place.id})" class="btn-premium w-full py-3 bg-rose-50 text-rose-600 rounded-2xl font-black text-[11px] uppercase tracking-wider hover:bg-rose-500 hover:text-white transition-all">
-                            Detalles
-                        </button>
-                    </div>
-                </div>
                 `;
             }).join('');
         }
 
-        function toggleComplete(id) {
-            const index = completedIds.indexOf(id);
-            const card = document.getElementById(`card-${id}`);
-            if (index > -1) {
-                completedIds.splice(index, 1);
-                card.classList.remove('completed');
+        function toggleFav(id) {
+            if (favorites.includes(id)) {
+                favorites = favorites.filter(f => f !== id);
             } else {
-                completedIds.push(id);
-                card.classList.add('completed');
+                favorites.push(id);
             }
-            localStorage.setItem('my_date_tracker', JSON.stringify(completedIds));
-            updateProgress();
+            localStorage.setItem('voyager_v2_favs', JSON.stringify(favorites));
+            renderGrid();
         }
 
-        function toggleFavorite(event, id) {
-            event.stopPropagation();
-            const index = favoriteIds.indexOf(id);
-            const btn = event.currentTarget;
-            const icon = btn.querySelector('i');
-
-            if (index > -1) {
-                favoriteIds.splice(index, 1);
-                btn.classList.remove('active', 'text-rose-600');
-                btn.classList.add('text-gray-400');
-                icon.classList.replace('fas', 'far');
-            } else {
-                favoriteIds.push(id);
-                btn.classList.add('active', 'text-rose-600');
-                btn.classList.remove('text-gray-400');
-                icon.classList.replace('far', 'fas');
-            }
-            localStorage.setItem('my_date_favorites', JSON.stringify(favoriteIds));
-            
-            // Refrescar si estamos en favoritos
-            const activeFilterText = document.querySelector('.filter-btn.bg-rose-500').innerText;
-            if (activeFilterText.includes('Favoritos')) {
-                filterPlaces('favoritos', document.querySelector('.filter-btn.bg-rose-500'));
-            }
+        function toggleVisited(id) {
+            visited = visited.includes(id) ? visited.filter(v => v !== id) : [...visited, id];
+            localStorage.setItem('voyager_v2_visited', JSON.stringify(visited));
+            updateStats();
+            renderGrid();
         }
 
-        function updateProgress() {
-            const total = places.length;
-            const completed = completedIds.length;
-            const percentage = (completed / total) * 100;
-            document.getElementById('progress-bar').style.width = percentage + '%';
-            document.getElementById('progress-text').innerText = `${completed}/${total}`;
-            const status = document.getElementById('progress-status');
-            if (percentage === 0) status.innerText = "¡Nuestra aventura comienza aquí! ✨";
-            else if (percentage < 30) status.innerText = "¡Estamos creando recuerdos! 🌟";
-            else if (percentage < 70) status.innerText = "¡Wow, llevamos muchísimos! 🚀";
-            else if (percentage < 100) status.innerText = "¡Casi completamos nuestro mundo! ⭐";
-            else status.innerText = "¡AVENTURA COMPLETADA! ERES LA MEJOR 🏆";
+        function updateStats() {
+            const count = visited.length;
+            const total = 70;
+            const percent = Math.round((count/total)*100);
+            document.getElementById('visited-count').innerText = count;
+            document.getElementById('progress-percent').innerText = `${percent}%`;
+            document.getElementById('progress-circle').style.strokeDashoffset = 150.8 - (percent/100)*150.8;
         }
 
-        function filterPlaces(category, btn) {
-            document.querySelectorAll('.filter-btn').forEach(b => {
-                b.classList.remove('bg-rose-500', 'text-white', 'shadow-md');
-                b.classList.add('bg-white/80', 'text-rose-600');
-            });
-            btn.classList.add('bg-rose-500', 'text-white', 'shadow-md');
-            btn.classList.remove('bg-white/80', 'text-rose-600');
-
-            let filtered;
-            if (category === 'todos') {
-                filtered = places;
-            } else if (category === 'favoritos') {
-                filtered = places.filter(p => favoriteIds.includes(p.id));
-                document.getElementById('no-results-text').innerText = "Aún no tienes lugares favoritos. ¡Marca algunos con el corazón! ❤️";
-            } else {
-                filtered = places.filter(p => p.category === category);
-                document.getElementById('no-results-text').innerText = "¡Pronto añadiremos más aventuras! ✨";
-            }
-            renderPlaces(filtered);
-        }
-
-        function openDetails(id) {
-            const place = places.find(p => p.id === id);
-            const modal = document.getElementById('modal');
-            const content = document.getElementById('modal-content');
-            content.innerHTML = `
-                <div class="relative h-64 sm:h-80">
-                    <img src="${place.img}" onerror="this.onerror=null; this.src='${FALLBACK_IMG}';" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-                    <div class="absolute bottom-6 left-6 right-6">
-                        <p class="text-rose-400 text-xs font-black uppercase tracking-[0.2em] mb-2">${place.category}</p>
-                        <h2 class="text-3xl sm:text-4xl font-black text-white leading-tight">${place.name}</h2>
-                    </div>
+        function openModal(id) {
+            const p = rawData.find(x => x.id === id);
+            document.getElementById('modalContent').innerHTML = `
+                <div class="relative h-64">
+                    <img src="${p.img}" class="w-full h-full object-cover">
+                    <button onclick="closeModal()" class="absolute top-6 right-6 w-10 h-10 bg-black/20 text-white rounded-full backdrop-blur-md flex items-center justify-center hover:bg-black/40"><i class="fa-solid fa-xmark"></i></button>
                 </div>
-                <div class="p-8">
-                    <div class="flex items-center gap-3 mb-6 bg-rose-50 p-4 rounded-2xl border border-rose-100">
-                        <i class="fas fa-map-location-dot text-rose-500 text-lg"></i>
-                        <span class="text-sm font-bold text-gray-700">${place.location}</span>
+                <div class="p-10 bg-white">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="px-2 py-0.5 bg-rose-50 text-rose-500 text-[8px] font-black uppercase tracking-widest rounded-md">${categoryLabels[p.category]}</span>
+                        <h2 class="text-3xl font-800 text-slate-800">${p.name}</h2>
                     </div>
-                    <p class="text-gray-600 text-lg leading-relaxed italic mb-8 font-medium">"${place.description}"</p>
-                    <a href="${place.maps}" target="_blank" class="flex items-center justify-center gap-3 w-full py-5 bg-gradient-to-r from-rose-500 to-rose-600 text-white rounded-2xl font-black shadow-xl shadow-rose-200 hover:scale-[1.02] transition-all active:scale-95 text-sm uppercase tracking-widest">
-                        <i class="fas fa-directions text-xl"></i> Ver ruta en Mapas
-                    </a>
+                    <p class="text-rose-500 text-[10px] font-bold uppercase tracking-[0.2em] mb-6">${p.location}</p>
+                    <p class="text-slate-500 italic accent-font text-3xl mb-10 leading-relaxed">"${p.description}"</p>
+                    <a href="https://www.google.com/maps/search/${encodeURIComponent(p.name + ' ' + p.location)}" target="_blank" class="block w-full py-5 bg-rose-500 text-white rounded-2xl text-center font-bold text-xs uppercase tracking-[0.3em] shadow-xl shadow-rose-100 transition-all hover:bg-rose-600 active:scale-95">Ver Ubicación</a>
                 </div>
             `;
-            modal.classList.remove('hidden');
+            document.getElementById('modal').classList.remove('hidden');
+            setTimeout(() => document.getElementById('modalContainer').classList.remove('scale-95', 'opacity-0'), 10);
             document.body.style.overflow = 'hidden';
         }
 
         function closeModal() {
-            document.getElementById('modal').classList.add('hidden');
-            document.body.style.overflow = 'auto';
+            document.getElementById('modalContainer').classList.add('scale-95', 'opacity-0');
+            setTimeout(() => { document.getElementById('modal').classList.add('hidden'); document.body.style.overflow = 'auto'; }, 300);
         }
 
-        window.onclick = (e) => { if (e.target == document.getElementById('modal')) closeModal(); }
+        document.getElementById('searchInput').addEventListener('input', renderGrid);
         window.onload = init;
     </script>
 </body>
