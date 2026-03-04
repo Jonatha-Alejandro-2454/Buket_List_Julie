@@ -6,7 +6,6 @@
     <title>Diario de Aventuras</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <!-- Importación de Tipografías Premium -->
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
     
     <style>
@@ -27,7 +26,6 @@
             position: relative;
         }
 
-        /* Fondo de destellos en lugar de corazones */
         body::before {
             content: "";
             position: fixed;
@@ -96,6 +94,14 @@
             transform: scale(1.05);
             box-shadow: 0 10px 15px -3px rgba(225, 29, 72, 0.2);
         }
+
+        .fav-btn {
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .fav-btn.active {
+            color: #e11d48;
+            transform: scale(1.2);
+        }
     </style>
 </head>
 <body class="antialiased text-gray-800">
@@ -120,13 +126,13 @@
     <nav class="p-4 overflow-x-auto whitespace-nowrap bg-white/40 sticky top-[115px] md:top-[145px] z-40 custom-scrollbar border-b border-rose-100 backdrop-blur-md flex justify-start md:justify-center">
         <div class="flex gap-2 px-2">
             <button onclick="filterPlaces('todos', this)" class="filter-btn px-6 py-2 rounded-full bg-rose-500 text-white font-extrabold text-xs shadow-md transition-all">✨ Todos</button>
+            <button onclick="filterPlaces('favoritos', this)" class="filter-btn px-6 py-2 rounded-full bg-white/80 border border-rose-100 text-rose-600 font-bold text-xs hover:bg-rose-50 transition-all">❤️ Mis Favoritos</button>
             <button onclick="filterPlaces('acuarios', this)" class="filter-btn px-6 py-2 rounded-full bg-white/80 border border-rose-100 text-rose-600 font-bold text-xs hover:bg-rose-50 transition-all">🐠 Acuarios</button>
             <button onclick="filterPlaces('museos', this)" class="filter-btn px-6 py-2 rounded-full bg-white/80 border border-rose-100 text-rose-600 font-bold text-xs hover:bg-rose-50 transition-all">🏛️ Museos</button>
             <button onclick="filterPlaces('cafeterias', this)" class="filter-btn px-6 py-2 rounded-full bg-white/80 border border-rose-100 text-rose-600 font-bold text-xs hover:bg-rose-50 transition-all">☕ Cafeterías</button>
             <button onclick="filterPlaces('comida', this)" class="filter-btn px-6 py-2 rounded-full bg-white/80 border border-rose-100 text-rose-600 font-bold text-xs hover:bg-rose-50 transition-all">🍜 Comida</button>
             <button onclick="filterPlaces('pueblos', this)" class="filter-btn px-6 py-2 rounded-full bg-white/80 border border-rose-100 text-rose-600 font-bold text-xs hover:bg-rose-50 transition-all">🏘️ Pueblos</button>
             <button onclick="filterPlaces('parques', this)" class="filter-btn px-6 py-2 rounded-full bg-white/80 border border-rose-100 text-rose-600 font-bold text-xs hover:bg-rose-50 transition-all">🌳 Parques</button>
-            <button onclick="filterPlaces('especiales', this)" class="filter-btn px-6 py-2 rounded-full bg-white/80 border border-rose-100 text-rose-600 font-bold text-xs hover:bg-rose-50 transition-all">⭐ Especiales</button>
         </div>
     </nav>
 
@@ -136,7 +142,7 @@
             <div class="inline-block p-6 bg-white/80 rounded-full shadow-xl mb-4">
                 <i class="fas fa-sparkles text-rose-300 text-5xl"></i>
             </div>
-            <p class="text-rose-500 text-xl font-bold">¡Pronto añadiremos más aventuras! ✨</p>
+            <p id="no-results-text" class="text-rose-500 text-xl font-bold">¡Pronto añadiremos más aventuras! ✨</p>
         </div>
     </main>
 
@@ -152,7 +158,7 @@
     <script>
         const FALLBACK_IMG = "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&auto=format&fit=crop";
 
-        const places = [
+        const rawPlaces = [
             { id: 1, name: "Museo Jumex", category: "museos", description: "Referente del arte contemporáneo en un recinto de arquitectura icónica.", location: "Polanco, CDMX", maps: "https://www.google.com/maps/search/Museo+Jumex", img: "https://images.unsplash.com/photo-1554907984-15263bfd63bd?w=600" },
             { id: 2, name: "Museo Frida Kahlo", category: "museos", description: "La famosa 'Casa Azul' donde vivió la artista.", location: "Coyoacán, CDMX", maps: "https://www.google.com/maps/search/Museo+Frida+Kahlo", img: "https://images.unsplash.com/photo-1518998053574-53ee7511c73b?w=600" },
             { id: 3, name: "Snowpink Bingsu", category: "cafeterias", description: "Postres coreanos (Bingsu) y bebidas aesthetic.", location: "Juárez, CDMX", maps: "https://www.google.com/maps/search/Snowpink+CDMX", img: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=600" },
@@ -194,7 +200,7 @@
             { id: 39, name: "Audiorama Chapultepec", category: "parques", description: "Rincón oculto en el bosque para escuchar música clásica.", location: "Chapultepec, CDMX", maps: "https://www.google.com/maps/search/Audiorama+Chapultepec", img: "https://images.unsplash.com/photo-1444021465936-c6ca81d39b84?w=600" },
             { id: 40, name: "Basílica de Santa María de Guadalupe", category: "especiales", description: "Uno de los santuarios más visitados del mundo.", location: "Gustavo A. Madero, CDMX", maps: "https://www.google.com/maps/search/Basilica+de+Guadalupe", img: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600" },
             { id: 41, name: "Museo Dolores Olmedo", category: "museos", description: "Casa de arte, xoloitzcuintles y pavos reales.", location: "Xochimilco, CDMX", maps: "https://www.google.com/maps/search/Museo+Dolores+Olmedo", img: "https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?w=600" },
-            { id: 42, name: "Hachi Coffee", category: "cafeterias", description: "One píece cafe tematico.", location: "Coyoacán, CDMX", maps: "https://www.google.com/maps/search/Hachi+Coffee+CDMX", img: "https://images.unsplash.com/photo-1520201163981-8cc95007dd2a?w=600" },
+            { id: 42, name: "Hachi Coffee", category: "cafeterias", description: "One piece cafe tematico.", location: "Coyoacán, CDMX", maps: "https://www.google.com/maps/search/Hachi+Coffee+CDMX", img: "https://images.unsplash.com/photo-1520201163981-8cc95007dd2a?w=600" },
             { id: 43, name: "Malinalco Pueblo Mágico", category: "pueblos", description: "Zona arqueológica única tallada en el cerro.", location: "EdoMex", maps: "https://www.google.com/maps/search/Malinalco", img: "https://images.unsplash.com/photo-1544967082-d9d25d867d66?w=600" },
             { id: 44, name: "Fuente de Tláloc", category: "parques", description: "Mural subacuático de Diego Rivera en Cárcamo de Dolores.", location: "Chapultepec II, CDMX", maps: "https://www.google.com/maps/search/Fuente+de+Tlaloc", img: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600" },
             { id: 45, name: "Museo Universitario Arte Contemporáneo (MUAC)", category: "museos", description: "Espacio moderno para el arte contemporáneo internacional.", location: "CU, CDMX", maps: "https://www.google.com/maps/search/MUAC+UNAM", img: "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=600" },
@@ -225,7 +231,11 @@
             { id: 70, name: "Museo del Ejército y Fuerza Aérea", category: "museos", description: "Historia militar mexicana.", location: "Centro Histórico, CDMX", maps: "https://www.google.com/maps/search/Museo+del+Ejercito", img: "https://images.unsplash.com/photo-1590247813693-5541d1c609fd?w=600" }
         ];
 
+        // Ordenar alfabéticamente la lista original una sola vez al cargar
+        const places = [...rawPlaces].sort((a, b) => a.name.localeCompare(b.name, 'es', { sensitivity: 'base' }));
+
         let completedIds = JSON.parse(localStorage.getItem('my_date_tracker')) || [];
+        let favoriteIds = JSON.parse(localStorage.getItem('my_date_favorites')) || [];
 
         function init() {
             renderPlaces(places);
@@ -245,6 +255,7 @@
             noResults.classList.add('hidden');
             grid.innerHTML = data.map((place, index) => {
                 const isCompleted = completedIds.includes(place.id);
+                const isFavorite = favoriteIds.includes(place.id);
                 return `
                 <div class="place-card rounded-[2rem] shadow-md border border-rose-100 overflow-hidden relative group ${isCompleted ? 'completed' : ''}" id="card-${place.id}" style="animation: fadeIn 0.4s ease forwards ${index * 0.03}s">
                     <div class="relative h-48 md:h-56 overflow-hidden">
@@ -253,6 +264,11 @@
                              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" 
                              loading="lazy"
                              onerror="this.onerror=null; this.src='${FALLBACK_IMG}';">
+                        
+                        <button onclick="toggleFavorite(event, ${place.id})" class="fav-btn absolute top-4 left-4 bg-white/90 p-2 rounded-full shadow-lg z-10 ${isFavorite ? 'active text-rose-600' : 'text-gray-400'}">
+                            <i class="${isFavorite ? 'fas' : 'far'} fa-heart text-lg"></i>
+                        </button>
+
                         <div class="check-badge absolute inset-0 bg-rose-600/30 backdrop-blur-[2px] items-center justify-center">
                             <div class="bg-white rounded-full p-4 shadow-2xl transform scale-125">
                                 <i class="fas fa-star text-rose-500 text-xl"></i>
@@ -292,6 +308,32 @@
             updateProgress();
         }
 
+        function toggleFavorite(event, id) {
+            event.stopPropagation();
+            const index = favoriteIds.indexOf(id);
+            const btn = event.currentTarget;
+            const icon = btn.querySelector('i');
+
+            if (index > -1) {
+                favoriteIds.splice(index, 1);
+                btn.classList.remove('active', 'text-rose-600');
+                btn.classList.add('text-gray-400');
+                icon.classList.replace('fas', 'far');
+            } else {
+                favoriteIds.push(id);
+                btn.classList.add('active', 'text-rose-600');
+                btn.classList.remove('text-gray-400');
+                icon.classList.replace('far', 'fas');
+            }
+            localStorage.setItem('my_date_favorites', JSON.stringify(favoriteIds));
+            
+            // Refrescar si estamos en favoritos
+            const activeFilterText = document.querySelector('.filter-btn.bg-rose-500').innerText;
+            if (activeFilterText.includes('Favoritos')) {
+                filterPlaces('favoritos', document.querySelector('.filter-btn.bg-rose-500'));
+            }
+        }
+
         function updateProgress() {
             const total = places.length;
             const completed = completedIds.length;
@@ -299,7 +341,7 @@
             document.getElementById('progress-bar').style.width = percentage + '%';
             document.getElementById('progress-text').innerText = `${completed}/${total}`;
             const status = document.getElementById('progress-status');
-            if (percentage === 0) status.innerText = "¡La aventura comienza aquí! ✨";
+            if (percentage === 0) status.innerText = "¡Nuestra aventura comienza aquí! ✨";
             else if (percentage < 30) status.innerText = "¡Estamos creando recuerdos! 🌟";
             else if (percentage < 70) status.innerText = "¡Wow, llevamos muchísimos! 🚀";
             else if (percentage < 100) status.innerText = "¡Casi completamos nuestro mundo! ⭐";
@@ -313,7 +355,17 @@
             });
             btn.classList.add('bg-rose-500', 'text-white', 'shadow-md');
             btn.classList.remove('bg-white/80', 'text-rose-600');
-            const filtered = category === 'todos' ? places : places.filter(p => p.category === category);
+
+            let filtered;
+            if (category === 'todos') {
+                filtered = places;
+            } else if (category === 'favoritos') {
+                filtered = places.filter(p => favoriteIds.includes(p.id));
+                document.getElementById('no-results-text').innerText = "Aún no tienes lugares favoritos. ¡Marca algunos con el corazón! ❤️";
+            } else {
+                filtered = places.filter(p => p.category === category);
+                document.getElementById('no-results-text').innerText = "¡Pronto añadiremos más aventuras! ✨";
+            }
             renderPlaces(filtered);
         }
 
